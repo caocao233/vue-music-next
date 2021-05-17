@@ -1,6 +1,7 @@
 <template>
   <m-header></m-header>
   <tab></tab>
+  <router-view></router-view>
 </template>
 
 <script>
