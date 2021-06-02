@@ -1,18 +1,49 @@
 <template>
-  <scroll class="index-list">
+  <scroll
+    class="index-list"
+    :probe-type="3"
+    @scroll="onScroll"
+    ref="scrollRef"
+  >
     <ul ref="groupRef">
       <li v-for="group in data" :key="group.title" class="group">
         <h2 class="title">{{group.title}}</h2>
         <ul>
-          <li v-for="item in group.list" :key="item.id" class="item">
+          <li
+            v-for="item in group.list"
+            :key="item.id"
+            class="item"
+            @click="onItemClick(item)"
+          >
             <img class="avatar" v-lazy="item.pic" alt="">
             <span class="name">{{item.name}}</span>
           </li>
         </ul>
       </li>
     </ul>
-    <div class="fixed">
+    <div
+      class="fixed"
+      v-show="fixedTitle"
+      :style="fixedStyle"
+    >
       <div class="fixed-title">{{fixedTitle}}</div>
+    </div>
+    <div
+      class="shortcut"
+      @touchstart.stop.prevent="onShortcutTouchStart"
+      @touchmove.stop.prevent="onShortcutTouchMove"
+      @touchend.stop.prevent
+    >
+      <ul>
+        <li
+          v-for="(item, index) in shortcutList"
+          :key="item"
+          :data-index="index"
+          class="item"
+          :class="{'current':currentIndex===index}">
+          {{item}}
+        </li>
+      </ul>
     </div>
   </scroll>
 </template>
@@ -20,10 +51,12 @@
 <script>
   import Scroll from '@/components/base/scroll/scroll'
   import useFixed from './use-fixed'
+  import useShortcut from './use-shortcut'
 
   export default {
     name: 'index-list',
     components: { Scroll },
+    emits: ['select'],
     props: {
       data: {
         type: Array,
@@ -32,11 +65,25 @@
         }
       }
     },
-    setup(props) {
-      const { groupRef } = useFixed(props)
+    setup(props, { emit }) {
+      const { groupRef, onScroll, fixedTitle, fixedStyle, currentIndex } = useFixed(props)
+      const { shortcutList, onShortcutTouchStart, onShortcutTouchMove, scrollRef } = useShortcut(props, groupRef)
+
+      function onItemClick(item) {
+        emit('select', item)
+      }
 
       return {
-        groupRef
+        groupRef,
+        onScroll,
+        fixedTitle,
+        fixedStyle,
+        shortcutList,
+        currentIndex,
+        scrollRef,
+        onItemClick,
+        onShortcutTouchStart,
+        onShortcutTouchMove
       }
     }
   }
@@ -107,6 +154,27 @@
       font-size: $font-size-small;
       &.current {
         color: $color-theme
+      }
+    }
+  }
+  .shortcut{
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    padding: 20px 0;
+    border-radius: 10px;
+    text-align: center;
+    background: $color-background-d;
+    font-family: Helvetica;
+    .item{
+      padding: 3px;
+      line-height: 1;
+      color: $color-text-l;
+      font-size: $font-size-small;
+      &.current{
+        color: $color-theme;
       }
     }
   }
