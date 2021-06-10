@@ -5448,6 +5448,11 @@ js-base64@^2.1.8:
   resolved "https://registry.npm.taobao.org/js-base64/download/js-base64-2.6.4.tgz#f4e686c5de1ea1f867dbcad3d46d969428df98c4"
   integrity sha1-9OaGxd4eofhn28rT1G2WlCjfmMQ=
 
+js-base64@^3.6.1:
+  version "3.6.1"
+  resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-3.6.1.tgz#555aae398b74694b4037af1f8a5a6209d170efbe"
+  integrity sha512-Frdq2+tRRGLQUIQOgsIGSCd1VePCS2fsddTG5dTCqR0JHgltXWfsxnY0gIXPoMeRmdom6Oyq+UMOFg5suduOjQ==
+
 js-message@1.0.7:
   version "1.0.7"
   resolved "https://registry.npm.taobao.org/js-message/download/js-message-1.0.7.tgz#fbddd053c7a47021871bb8b2c95397cc17c20e47"
@@ -5802,6 +5807,11 @@ lru-cache@^6.0.0:
   integrity sha1-bW/mVw69lqr5D8rR2vo7JWbbOpQ=
   dependencies:
     yallist "^4.0.0"
+
+lyric-parser@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/lyric-parser/-/lyric-parser-1.0.1.tgz#a1f8aa77653cf947ecf94df51d5f816afc9ed44c"
+  integrity sha1-ofiqd2U8+Ufs+U31HV+Bavye1Ew=
 
 magic-string@^0.25.7:
   version "0.25.7"

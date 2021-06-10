@@ -19,8 +19,9 @@ export default function useCd() {
   })
 
   function syncTransform(wrapper, inner) {
+    const wrapperTransfrom = getComputedStyle(wrapper).transform
     const innerTransfrom = getComputedStyle(inner).transform
-    wrapper.style.transform = innerTransfrom
+    wrapper.style.transform = wrapperTransfrom === 'none' ? innerTransfrom : innerTransfrom.concat('', wrapperTransfrom)
   }
 
   return {
