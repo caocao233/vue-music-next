@@ -1,5 +1,12 @@
 <template>
   <div class="player" v-show="playlist.length">
+    <transition
+      name="normal"
+      @enter="enter"
+      @after-enter="afterEenter"
+      @leave="leave"
+      @after-leave="afterLeave"
+    >
     <div class="normal-player" v-show="fullScreen">
       <div class="background">
         <img :src="currentSong.pic">
@@ -18,7 +25,7 @@
         @touchend.prevent="onMiddleTouchEnd"
       >
         <div class="middle-l" :style="middleLStyle">
-          <div class="cd-wrapper">
+          <div class="cd-wrapper" ref="cdWrapperRef">
             <div class="cd" ref="cdRef">
               <img
                 ref="cdImageRef"
@@ -90,6 +97,7 @@
         </div>
       </div>
     </div>
+    </transition>
     <mini-player
       :progress="progress"
       :toggle-play="togglePlay"
@@ -113,6 +121,7 @@ import useFavorite from './use-favorite'
 import useCd from './use-cd'
 import useLyric from './use-lyric'
 import useMiddleInteractive from './use-middle-interactive'
+import useAnimation from './use-animation'
 import ProgressBar from './progress-bar'
 import Scroll from '@/components/base/scroll/scroll'
 import MiniPlayer from './mini-player'
@@ -155,6 +164,7 @@ export default {
     const { cdCls, cdRef, cdImageRef } = useCd()
     const { currentLyric, currentLineNum, playLyric, lyricListRef, lyricScrollRef, stopLyric, pureMusicLyric, playingLyric } = useLyric({ songReady, currentTime })
     const { currentShow, middleLStyle, middleRStyle, onMiddleTouchMove, onMiddleTouchStart, onMiddleTouchEnd } = useMiddleInteractive()
+    const { cdWrapperRef, afterEnter, enter, leave, afterLeave } = useAnimation()
 
     // computed
     const playlist = computed(() => store.state.playlist)
@@ -181,6 +191,7 @@ export default {
       const audioEl = audioRef.value
       audioEl.src = newSong.url
       audioEl.play()
+      store.commit('setPlayingState', true)
     })
 
     watch(playing, (newPlaying) => {
@@ -236,9 +247,9 @@ export default {
           index = list.length - 1 // 前进到列表的最后一首歌
         }
         store.commit('setCurrentIndex', index)
-        if (!playing.value) {
-          store.commit('setPlayingState', true)
-        }
+        // if (!playing.value) {
+        //   store.commit('setPlayingState', true)
+        // }
       }
     }
 
@@ -257,9 +268,9 @@ export default {
           index = 0 // 前进到列表的最后一首歌
         }
         store.commit('setCurrentIndex', index)
-        if (!playing.value) {
-          store.commit('setPlayingState', true)
-        }
+        // if (!playing.value) {
+        //   store.commit('setPlayingState', true)
+        // }
       }
     }
 
@@ -357,7 +368,12 @@ export default {
       onMiddleTouchStart,
       onMiddleTouchMove,
       playlist,
-      barRef
+      barRef,
+      cdWrapperRef,
+      afterEnter,
+      enter,
+      leave,
+      afterLeave
     }
   }
 }
