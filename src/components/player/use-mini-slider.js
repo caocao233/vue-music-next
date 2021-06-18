@@ -54,10 +54,10 @@ export default function useMiniSlider() {
       }
     })
 
-    watch(playlist, async () => {
-      if (sliderVal && sliderShow.value) {
+    watch(playlist, async (newList) => {
+      if (sliderVal && sliderShow.value && newList.length) {
         await nextTick()
-        sliderVal.value.refresh()
+        sliderVal.refresh()
       }
     })
   })

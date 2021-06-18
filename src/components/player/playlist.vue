@@ -15,6 +15,9 @@
                 @click="changeMode"
               ></i>
               <span class="text">{{ modeText }}</span>
+              <span class="clear" @click="showConfirm">
+                <i class="icon-clear"></i>
+              </span>
             </h1>
           </div>
           <scroll
@@ -51,6 +54,12 @@
             <span>关闭</span>
           </div>
         </div>
+        <confirm
+          ref="confirmRef"
+          @confirm=" "
+          text="是否清空播放列表？"
+          confirm-btn-text="清空"
+        ></confirm>
       </div>
     </transition>
   </teleport>
@@ -58,6 +67,7 @@
 
 <script>
   import Scroll from '@/components/base/scroll/scroll'
+  import Confirm from '@/components/base/confirm/confirm'
   import { computed, ref, nextTick, watch } from 'vue'
   import { useStore } from 'vuex'
   import useMode from './use-mode'
@@ -65,12 +75,13 @@
 
   export default {
     name: 'playlist',
-    components: { Scroll },
+    components: { Confirm, Scroll },
     setup() {
       const visible = ref(false)
       const removing = ref(false)
       const scrollRef = ref(null)
       const listRef = ref(null)
+      const confirmRef = ref(null)
 
       const store = useStore()
       const playlist = computed(() => store.state.playlist)
@@ -137,9 +148,22 @@
         }
         removing.value = true
         store.dispatch('removeSong', song)
+        if (!playlist.value.length) {
+          hide()
+        }
         setTimeout(() => {
           removing.value = false
         }, 300)
+      }
+
+      function showConfirm() {
+        confirmRef.value.show()
+      }
+
+      function confirmClear() {
+      //  清空歌曲的回调
+        store.dispatch('clearSongList')
+        hide()
       }
 
       return {
@@ -160,7 +184,10 @@
         changeMode,
         // favorite
         getFavoriteIcon,
-        toggleFavorite
+        toggleFavorite,
+        showConfirm,
+        confirmRef,
+        confirmClear
       }
     }
   }
